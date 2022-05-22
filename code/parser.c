@@ -32,6 +32,32 @@ Gramática da linguagem aceita pelo parser:
  Atualmente, nao ha controle sobre a coluna e a linha em que o erro foi encontrado.
 */
 
+/*
+Modificações feitas na produção da gramática:
+
+  C -> id C' E ;
+      | while (E) C
+      | { B }
+      | D
+
+  C' -> =
+      | +=
+      | -=
+      | *=
+      | /=
+
+  D -> ++ id ;
+      | -- id ;
+
+  E' -> +TE'
+      | -TE'
+      | epsilon
+
+  T' -> *FT'
+      | /FT'
+      | epsilon
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "lex.h"
@@ -123,14 +149,15 @@ void B(){
   }
 }
 /*
- C -> id = E ; 
+ C -> id C' E ; 
       | while (E) C 
       | { B }
+      | D
 */
 void C(){
-   if(lookahead==ID){ //id = E ;
+   if(lookahead==ID){ //id C' E ;
     match(ID);
-    match(OP_ATRIB);
+    C_();
     E();
     match(PONTO_VIRG);
   }
@@ -141,12 +168,57 @@ void C(){
     match(FECHA_PARENT);
     C();
   }
-  else {
+  else if (lookahead=ABRE_CHAVES){
     match(ABRE_CHAVES);
     B();
     match(FECHA_CHAVES);
   }
+  else {
+    D();
+  }
 }
+
+/*
+  C' -> =
+      | +=
+      | -=
+      | *=
+      | /=
+*/
+void C_(){
+   if(lookahead==OP_ATRIB){
+    match(OP_ATRIB);
+  }
+  else if (lookahead==OP_ADD_ATRB){
+    match(OP_ADD_ATRB);
+  }
+  else if (lookahead=OP_SUB_ATRB){
+    match(OP_SUB_ATRB);
+  }
+  else if (lookahead=OP_MULT_ATRB){
+    match(OP_MULT_ATRB);
+  }
+  else {
+    match(OP_DIV_ATRB);
+  }
+}
+
+/*
+  D -> ++ id ;
+      | -- id ;
+*/
+void D(){
+  if (lookahead=OP_PLUSPLUS) {
+    match(OP_PLUSPLUS);
+    match(ID);
+    match(PONTO_VIRG);
+  } else {
+    match(OP_MINUSMINUS);
+    match(ID);
+    match(PONTO_VIRG);
+  }
+}
+
 // E-> T E_
 void E(){
   T();
@@ -157,15 +229,27 @@ void T(){
   F();
   T_();
 }
-// E_ -> + T E_ | epsilon
+
+/*
+  E' -> +TE'
+      | -TE'
+      | epsilon
+*/
 void E_(){
   if(lookahead==OP_ADIT){
     match(OP_ADIT);
     T();
     E_();
+  } else if (lookahead=OP_MINUS) {
+      match(OP_MINUS);
+      T();
+      E_();
   }
 }
-/* T'-> *FT' 
+
+/*
+  T' -> *FT'
+      | /FT'
       | epsilon
 */
 void T_(){
@@ -173,8 +257,13 @@ void T_(){
     match(OP_MULT);
     F();
     T_();
+  } else if (lookahead==OP_DIV) {
+    match(OP_DIV);
+    F();
+    T_();
   }
 }
+
 /*
  F -> (E) 
       | id 
