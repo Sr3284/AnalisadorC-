@@ -35,10 +35,12 @@ Gramática da linguagem aceita pelo parser:
 /*
 Modificações feitas na produção da gramática:
 
+  B -> D C B 
+      | epsilon
+
   C -> id C' E ;
       | while (E) C
-      | { B }
-      | D
+      | { B }   
 
   C' -> =
       | +=
@@ -139,11 +141,12 @@ void Function_(){
   }
 }
 
-/* B -> C B 
+/* B -> D C B 
       | epsilon
 */
 void B(){
-  if(lookahead==ID || lookahead==WHILE || lookahead==ABRE_CHAVES){
+  if(lookahead==ID || lookahead==WHILE || lookahead==ABRE_CHAVES || lookahead==OP_PLUSPLUS || lookahead==OP_MINUSMINUS){
+    D();
     C();
     B();
   }
@@ -152,7 +155,6 @@ void B(){
  C -> id C' E ; 
       | while (E) C 
       | { B }
-      | D
 */
 void C(){
    if(lookahead==ID){ //id C' E ;
@@ -172,9 +174,6 @@ void C(){
     match(ABRE_CHAVES);
     B();
     match(FECHA_CHAVES);
-  }
-  else {
-    D();
   }
 }
 
@@ -206,13 +205,14 @@ void C_(){
 /*
   D -> ++ id ;
       | -- id ;
+      | epsilon
 */
 void D(){
   if (lookahead==OP_PLUSPLUS) {
     match(OP_PLUSPLUS);
     match(ID);
     match(PONTO_VIRG);
-  } else {
+  } else if (lookahead==OP_MINUSMINUS){
     match(OP_MINUSMINUS);
     match(ID);
     match(PONTO_VIRG);
