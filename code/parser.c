@@ -168,7 +168,7 @@ void C(){
     match(FECHA_PARENT);
     C();
   }
-  else if (lookahead=ABRE_CHAVES){
+  else if (lookahead==ABRE_CHAVES){
     match(ABRE_CHAVES);
     B();
     match(FECHA_CHAVES);
@@ -192,10 +192,10 @@ void C_(){
   else if (lookahead==OP_ADD_ATRB){
     match(OP_ADD_ATRB);
   }
-  else if (lookahead=OP_SUB_ATRB){
+  else if (lookahead==OP_SUB_ATRB){
     match(OP_SUB_ATRB);
   }
-  else if (lookahead=OP_MULT_ATRB){
+  else if (lookahead==OP_MULT_ATRB){
     match(OP_MULT_ATRB);
   }
   else {
@@ -208,7 +208,7 @@ void C_(){
       | -- id ;
 */
 void D(){
-  if (lookahead=OP_PLUSPLUS) {
+  if (lookahead==OP_PLUSPLUS) {
     match(OP_PLUSPLUS);
     match(ID);
     match(PONTO_VIRG);
@@ -240,7 +240,7 @@ void E_(){
     match(OP_ADIT);
     T();
     E_();
-  } else if (lookahead=OP_MINUS) {
+  } else if (lookahead==OP_MINUS) {
       match(OP_MINUS);
       T();
       E_();
