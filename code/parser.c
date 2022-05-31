@@ -50,6 +50,7 @@ Modificações feitas na produção da gramática:
 
   D -> ++ id ;
       | -- id ;
+      | epsilon
 
   E' -> +TE'
       | -TE'
