@@ -1,10 +1,10 @@
 # AnalisadorC- / Item 10.
-- [ ] Operador binário de subtração (-)
-- [ ] Operador binário de divisão (/)
-- [ ] Operador de incremento (++)
-- [ ] Operador de decremento (--)
-- [ ] Operadores de atribuição:
-    - [ ] (+=)
-    - [ ] (-=)
-    - [ ] (*=)
-    - [ ] (/=)
+- [x] Operador binário de subtração (-)
+- [x] Operador binário de divisão (/)
+- [x] Operador de incremento (++)
+- [x] Operador de decremento (--)
+- [x] Operadores de atribuição:
+    - [x] (+=)
+    - [x] (-=)
+    - [x] (*=)
+    - [x] (/=)
